@@ -11,3 +11,33 @@ services:
       - ./data/mongodb:/data/db
     env_file:
       - ./mongodb.env
+
+  nginx:
+    image: nginx:mainline-alpine
+    depends_on:
+      - api
+      - client
+    volumes:
+      - ./data/html/client:/usr/share/nginx/html:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+    ports:
+      - "${INSTANCE_PORT}:80"
+      
+  api:
+    build: ./api
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./api/src:/usr/src/app/src
+    depends_on:
+      - "mongodb"
+    restart: unless-stopped
+    command: "npm run start"
+  
+  client:
+    build: ./client
+    volumes:
+      - ./client/src:/usr/src/app/src
+      - ./data/html/client:/usr/src/app/dist/client
+    restart: unless-stopped
+    command: "npm run watch"
