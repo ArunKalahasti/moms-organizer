@@ -5,20 +5,25 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
-import { CustomerCreationFormComponent } from './customer-creation-form/customer-creation-form.component';
 import { MainComponent } from './main/main.component';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { environment } from '../environments/environment';
+import { CustomerModule } from './customers/customer.module';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
     AppComponent,
-    CustomerCreationFormComponent,
     MainComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
+    HttpClientModule,
     StoreModule.forRoot({}, {}),
-    EffectsModule.forRoot([])
+    EffectsModule.forRoot([]),
+    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
+    AppRoutingModule,
+    CustomerModule
   ],
   providers: [],
   bootstrap: [AppComponent]
